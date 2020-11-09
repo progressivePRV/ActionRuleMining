@@ -17,29 +17,27 @@ import java.util.Set;
  */
 public class FileReader {
     
-    String dataFilePath="";
-    String attributeFilePath = "";
+    String dataFile="";
+    String attributeFile = "";
     String delimeter="";
     Integer minSupport=0;
     Double minConfidence=0.0;
     List<String> stableAttributes = new ArrayList<>();
+    String decisionAttribute="";
+    String toDecisionAttribute="";
+    String fromDecisionAttribute="";
         
 	
-    public void setAttributeFile(String path) {
-            attributeFilePath= path;
+    public void setAttributeFile(String attributeFile) {
+            this.attributeFile= attributeFile;
     }
 
-    public void setDataFile(String path) {
-            dataFilePath=path;
+    public void setDataFile(String dataFile) {
+            this.dataFile=dataFile;
     }
 
     public void setDelimeter(String delimeter) {
             this.delimeter=delimeter;
-    }
-
-    @Override
-    public String toString() {
-        return "dataFilePath=" + dataFilePath + ",\n attributeFilePath=" + attributeFilePath + ",\n delimeter=" + delimeter + ",\n minSupport=" + minSupport + ",\n minConfidence=" + minConfidence + ",\n stableAttributes=" + stableAttributes;
     }
     
     public void setMinSupport(Integer minSupport){
@@ -53,6 +51,56 @@ public class FileReader {
     public void setStableAttributes(List<String> stableAttributes){
         this.stableAttributes = stableAttributes;
     }
+
+    public void setDecisionAttribute(String decisionAttribute) {
+        this.decisionAttribute = decisionAttribute;
+    }
+
+    public void setToDecisionAttribute(String toDecisionAttribute) {
+        this.toDecisionAttribute = toDecisionAttribute;
+    }
+
+    public void setFromDecisionAttribute(String fromDecisionAttribute) {
+        this.fromDecisionAttribute = fromDecisionAttribute;
+    }
+
+    public String getDataFile() {
+        return dataFile;
+    }
+
+    public String getAttributeFile() {
+        return attributeFile;
+    }
+
+    public String getDelimeter() {
+        return delimeter;
+    }
+
+    public Integer getMinSupport() {
+        return minSupport;
+    }
+
+    public Double getMinConfidence() {
+        return minConfidence;
+    }
+
+    public List<String> getStableAttributes() {
+        return stableAttributes;
+    }
+
+    public String getDecisionAttribute() {
+        return decisionAttribute;
+    }
+
+    public String getToDecisionAttribute() {
+        return toDecisionAttribute;
+    }
+
+    public String getFromDecisionAttribute() {
+        return fromDecisionAttribute;
+    }
+    
+    
             
     public HashMap<String,Set<String>> getAttributes(){
         
@@ -90,5 +138,12 @@ public class FileReader {
             return attributes;
 
     }
+
+    @Override
+    public String toString() {
+        return "dataFile=" + dataFile + ",\n attributeFile=" + attributeFile + ",\n delimeter=" + delimeter + ",\n minSupport=" + minSupport + ",\n minConfidence=" + minConfidence + ",\n stableAttributes=" + stableAttributes + ",\n decisionAttribute=" + decisionAttribute + ",\n toDecisionAttribute=" + toDecisionAttribute + ",\n fromDecisionAttribute=" + fromDecisionAttribute;
+    }
+    
+    
     
 }

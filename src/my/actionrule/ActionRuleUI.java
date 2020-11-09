@@ -33,6 +33,9 @@ public class ActionRuleUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        errorDialog = new javax.swing.JDialog();
+        errorLabel = new javax.swing.JLabel();
+        okErrorButton = new javax.swing.JButton();
         dataFileButton = new javax.swing.JButton();
         AttributeFileButton = new javax.swing.JButton();
         dataFileLabel = new javax.swing.JLabel();
@@ -63,8 +66,45 @@ public class ActionRuleUI extends javax.swing.JFrame {
         resultPane = new java.awt.ScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         resultTextPane = new javax.swing.JTextArea();
+        clearStableAttrSelection = new javax.swing.JButton();
+
+        errorDialog.setSize(507, 107);
+        errorDialog.setLocationRelativeTo(null);
+
+        errorLabel.setText("jLabel10");
+
+        okErrorButton.setText("OK");
+        okErrorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okErrorButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout errorDialogLayout = new javax.swing.GroupLayout(errorDialog.getContentPane());
+        errorDialog.getContentPane().setLayout(errorDialogLayout);
+        errorDialogLayout.setHorizontalGroup(
+            errorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, errorDialogLayout.createSequentialGroup()
+                .addContainerGap(426, Short.MAX_VALUE)
+                .addComponent(okErrorButton)
+                .addContainerGap())
+            .addGroup(errorDialogLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(errorLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        errorDialogLayout.setVerticalGroup(
+            errorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(errorDialogLayout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addComponent(errorLabel)
+                .addGap(34, 34, 34)
+                .addComponent(okErrorButton)
+                .addContainerGap())
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Action Rule Generator");
 
         dataFileButton.setText("Choose Data File");
         dataFileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -105,9 +145,34 @@ public class ActionRuleUI extends javax.swing.JFrame {
 
         jLabel3.setText("Minimum Confidence (%): ");
 
+        minSupportText.setEnabled(false);
+        minSupportText.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                minSupportTextInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+        minSupportText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minSupportTextActionPerformed(evt);
+            }
+        });
+        minSupportText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                minSupportTextKeyPressed(evt);
+            }
+        });
+
+        minConfidenceText.setEnabled(false);
         minConfidenceText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 minConfidenceTextActionPerformed(evt);
+            }
+        });
+        minConfidenceText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                minConfidenceTextKeyPressed(evt);
             }
         });
 
@@ -118,6 +183,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
         jLabel6.setText("Decision Attribute: ");
 
         decisionAttributeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
+        decisionAttributeBox.setEnabled(false);
         decisionAttributeBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 decisionAttributeBoxActionPerformed(evt);
@@ -129,12 +195,25 @@ public class ActionRuleUI extends javax.swing.JFrame {
         jLabel8.setText("From:");
 
         daFromBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
+        daFromBox.setEnabled(false);
+        daFromBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                daFromBoxActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("To:");
 
         daToBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
+        daToBox.setEnabled(false);
+        daToBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                daToBoxActionPerformed(evt);
+            }
+        });
 
         getReaminingAttrsButton.setText("Get Remaining Attributes");
+        getReaminingAttrsButton.setEnabled(false);
         getReaminingAttrsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 getReaminingAttrsButtonActionPerformed(evt);
@@ -146,6 +225,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        stableAttributeSelectList.setEnabled(false);
         stableAttributeSelectList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 stableAttributeSelectListValueChanged(evt);
@@ -156,6 +236,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
         jLabel5.setText("Select Stable Attributes:");
 
         generateActionRulesButton.setText("Get Action Rules");
+        generateActionRulesButton.setEnabled(false);
         generateActionRulesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 generateActionRulesButtonActionPerformed(evt);
@@ -168,87 +249,107 @@ public class ActionRuleUI extends javax.swing.JFrame {
 
         resultTextPane.setColumns(20);
         resultTextPane.setRows(5);
+        resultTextPane.setEnabled(false);
         jScrollPane2.setViewportView(resultTextPane);
 
         resultPane.add(jScrollPane2);
+
+        clearStableAttrSelection.setText("Clear Selection");
+        clearStableAttrSelection.setEnabled(false);
+        clearStableAttrSelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearStableAttrSelectionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(resultPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(349, 349, 349)
+                                .addComponent(loadDataButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(297, 297, 297)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(clearStableAttrSelection)
+                                    .addComponent(getReaminingAttrsButton))))
+                        .addGap(0, 435, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(delimeterBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel2)
-                                                    .addComponent(jLabel4))
-                                                .addGap(61, 61, 61))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(jLabel3)
-                                                .addGap(18, 18, 18)))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(loadedAttributes)
+                                                .addComponent(jLabel1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(delimeterBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(minSupportText, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(minConfidenceText, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(34, 34, 34)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel6)
-                                                    .addComponent(jLabel7))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(decisionAttributeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addGroup(layout.createSequentialGroup()
-                                                        .addGap(6, 6, 6)
-                                                        .addComponent(jLabel8)
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(jLabel2)
+                                                            .addComponent(jLabel4))
+                                                        .addGap(61, 61, 61))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                        .addComponent(jLabel3)
+                                                        .addGap(18, 18, 18)))
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(loadedAttributes)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(minSupportText, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(minConfidenceText, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGap(34, 34, 34)
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(jLabel6)
+                                                            .addComponent(jLabel7))
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(daFromBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(24, 24, 24)
-                                                        .addComponent(jLabel9)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(daToBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                                    .addComponent(resultPane, javax.swing.GroupLayout.PREFERRED_SIZE, 776, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(decisionAttributeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addGroup(layout.createSequentialGroup()
+                                                                .addGap(6, 6, 6)
+                                                                .addComponent(jLabel8)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(daFromBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(24, 24, 24)
+                                                                .addComponent(jLabel9)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(daToBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addGap(119, 119, 119)
+                                                .addComponent(jLabel11)))
+                                        .addGap(157, 157, 157))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addGap(152, 152, 152)
-                                                .addComponent(generateActionRulesButton))
-                                            .addGroup(layout.createSequentialGroup()
                                                 .addGap(131, 131, 131)
-                                                .addComponent(stableAttributesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addGap(119, 119, 119)
-                                        .addComponent(jLabel11))))
+                                                .addComponent(stableAttributesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(149, 149, 149)
+                                                .addComponent(generateActionRulesButton)
+                                                .addGap(0, 0, Short.MAX_VALUE))))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(dataFileButton)
                                     .addComponent(AttributeFileButton))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(attributeFileLabel)
-                                    .addComponent(dataFileLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(349, 349, 349)
-                        .addComponent(loadDataButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(297, 297, 297)
-                        .addComponent(getReaminingAttrsButton)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(dataFileLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
+                                    .addComponent(attributeFileLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,15 +394,17 @@ public class ActionRuleUI extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(stableAttributesLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(generateActionRulesButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addComponent(resultPane, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(clearStableAttrSelection)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addComponent(generateActionRulesButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(resultPane, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
@@ -309,34 +412,93 @@ public class ActionRuleUI extends javax.swing.JFrame {
 
     private void dataFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataFileButtonActionPerformed
         // TODO add your handling code here:
-                JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory()); 
-		
-		      FileNameExtensionFilter filter = new FileNameExtensionFilter("txt files","txt");
-		fileChooser.setFileFilter(filter);
-		
-		int val = fileChooser.showOpenDialog(null); 
-		
+        loadedAttributes.setText("no attributes loaded yet");
+        minSupportText.setText("");
+        minConfidenceText.setText("");
+        decisionAttributeBox.removeAllItems();
+        daToBox.removeAllItems();
+        daFromBox.removeAllItems();
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+
+        minSupportText.setEnabled(false);
+        minConfidenceText.setEnabled(false);
+        decisionAttributeBox.setEnabled(false);
+        daToBox.setEnabled(false);
+        daFromBox.setEnabled(false);
+        stableAttributeSelectList.setEnabled(false);
+        getReaminingAttrsButton.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
+
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("txt files", "txt");
+        fileChooser.setFileFilter(filter);
+
+        int val = fileChooser.showOpenDialog(null);
+
         if (val == JFileChooser.APPROVE_OPTION) {
-            dataFileLabel.setText(fileChooser.getSelectedFile().getAbsolutePath()); 
-        } 
+            dataFileLabel.setText(fileChooser.getSelectedFile().getAbsolutePath());
+        }
     }//GEN-LAST:event_dataFileButtonActionPerformed
 
     private void AttributeFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AttributeFileButtonActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory()); 
-		
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("txt files","txt");
-		fileChooser.setFileFilter(filter);
-		
-		int val = fileChooser.showOpenDialog(null); 
-		
+        loadedAttributes.setText("no attributes loaded yet");
+        minSupportText.setText("");
+        minConfidenceText.setText("");
+        decisionAttributeBox.removeAllItems();
+        daToBox.removeAllItems();
+        daFromBox.removeAllItems();
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+
+        minSupportText.setEnabled(false);
+        minConfidenceText.setEnabled(false);
+        decisionAttributeBox.setEnabled(false);
+        daToBox.setEnabled(false);
+        daFromBox.setEnabled(false);
+        stableAttributeSelectList.setEnabled(false);
+        getReaminingAttrsButton.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
+
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("txt files", "txt");
+        fileChooser.setFileFilter(filter);
+
+        int val = fileChooser.showOpenDialog(null);
+
         if (val == JFileChooser.APPROVE_OPTION) {
-            attributeFileLabel.setText(fileChooser.getSelectedFile().getAbsolutePath()); 
-        } 
+            attributeFileLabel.setText(fileChooser.getSelectedFile().getAbsolutePath());
+        }
     }//GEN-LAST:event_AttributeFileButtonActionPerformed
 
     private void delimeterBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delimeterBoxActionPerformed
         // TODO add your handling code here:
+        loadedAttributes.setText("no attributes loaded yet");
+        minSupportText.setText("");
+        minConfidenceText.setText("");
+        decisionAttributeBox.removeAllItems();
+        daToBox.removeAllItems();
+        daFromBox.removeAllItems();
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+
+        minSupportText.setEnabled(false);
+        minConfidenceText.setEnabled(false);
+        decisionAttributeBox.setEnabled(false);
+        daToBox.setEnabled(false);
+        daFromBox.setEnabled(false);
+        stableAttributeSelectList.setEnabled(false);
+        getReaminingAttrsButton.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
     }//GEN-LAST:event_delimeterBoxActionPerformed
 
     private void minConfidenceTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minConfidenceTextActionPerformed
@@ -345,68 +507,172 @@ public class ActionRuleUI extends javax.swing.JFrame {
 
     private void getReaminingAttrsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getReaminingAttrsButtonActionPerformed
         // TODO add your handling code here:
-        try{
-            fr.setMinConfidence(Double.parseDouble(minConfidenceText.getText()));
-            fr.setMinSupport(Integer.parseInt(minSupportText.getText()));
-            HashMap<String,Set<String>> attributes = fr.getAttributes();
-            String decisionAttribute = decisionAttributeBox.getSelectedItem().toString();
-            attributes.remove(decisionAttribute);
-            //String [] arr = new String [attributes.size()];
+        try {
+            Double minimumConfidence = Double.parseDouble(minConfidenceText.getText());
+            Integer minimumSupport = Integer.parseInt(minSupportText.getText());
 
-           stableAttributeSelectList.setListData(attributes.keySet().toArray(new String[attributes.size()]));
+            if (minimumSupport != null && minimumSupport >= 0 && minimumConfidence != null && minimumConfidence >= 0 && minimumConfidence <= 100 && decisionAttributeBox.getSelectedItem() != null && daFromBox.getSelectedItem() != null && daToBox.getSelectedItem() != null) {
+                if (!daFromBox.getSelectedItem().toString().equals(daToBox.getSelectedItem().toString())) {
+                    fr.setMinConfidence(minimumConfidence);
+                    fr.setMinSupport(minimumSupport);
+                    HashMap<String, Set<String>> attributes = fr.getAttributes();
+                    String decisionAttribute = decisionAttributeBox.getSelectedItem().toString();
+                    fr.setDecisionAttribute(decisionAttribute);
+                    fr.setFromDecisionAttribute(daFromBox.getSelectedItem().toString());
+                    fr.setToDecisionAttribute(daToBox.getSelectedItem().toString());
+                    attributes.remove(decisionAttribute);
+                    //String [] arr = new String [attributes.size()];
+                    stableAttributeSelectList.setListData(attributes.keySet().toArray(new String[attributes.size()]));
+                    stableAttributeSelectList.setEnabled(true);
+                    generateActionRulesButton.setEnabled(true);
+                    clearStableAttrSelection.setEnabled(true);
+                } else {
+                    errorLabel.setText("From and To values of decision attribute cannot be the same");
+                    errorDialog.show();
+                }
+            } else {
+                errorLabel.setText("Please fill all necessary data correctly");
+                errorDialog.show();
+            }
+        } catch (Exception ex) {
+            errorLabel.setText("Please enter correct values for support and confidence");
+            errorDialog.show();
         }
-        catch(Exception ex){
-            System.out.println(ex.getMessage());
-        }
-        
+
     }//GEN-LAST:event_getReaminingAttrsButtonActionPerformed
 
     private void generateActionRulesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateActionRulesButtonActionPerformed
         // TODO add your handling code here:
         fr.setStableAttributes(stableAttributeSelectList.getSelectedValuesList());
-        resultTextPane.setText(fr.toString()+"\n"+fr.toString()+"\n"+fr.toString()+"\n"+fr.toString()+"\n"+fr.toString()+"\n"+fr.toString()+"\n"+fr.toString());
+        resultTextPane.setText(fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString());
     }//GEN-LAST:event_generateActionRulesButtonActionPerformed
 
     private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
         // TODO add your handling code here:
-        fr.setAttributeFile(attributeFileLabel.getText());
-    	fr.setDataFile(dataFileLabel.getText());
-    	fr.setDelimeter(delimeterBox.getSelectedItem().toString());
-        
-        HashMap<String,Set<String>> attributes = fr.getAttributes();
-        loadedAttributes.setText(attributes.keySet().toString());
-        
-        decisionAttributeBox.removeAllItems();
-        
-        for(String attribute:attributes.keySet()){
-            decisionAttributeBox.addItem(attribute);
+        if (attributeFileLabel.getText() != null && !attributeFileLabel.getText().equals("no file selected") && dataFileLabel.getText() != null && !dataFileLabel.getText().equals("no file selected") && delimeterBox.getSelectedItem() != null) {
+            minSupportText.setEnabled(true);
+            minConfidenceText.setEnabled(true);
+            decisionAttributeBox.setEnabled(true);
+            daToBox.setEnabled(true);
+            daFromBox.setEnabled(true);
+            getReaminingAttrsButton.setEnabled(true);
+
+            fr.setAttributeFile(attributeFileLabel.getText());
+            fr.setDataFile(dataFileLabel.getText());
+            fr.setDelimeter(delimeterBox.getSelectedItem().toString());
+
+            HashMap<String, Set<String>> attributes = fr.getAttributes();
+            loadedAttributes.setText(attributes.keySet().toString());
+
+            decisionAttributeBox.removeAllItems();
+
+            for (String attribute : attributes.keySet()) {
+                decisionAttributeBox.addItem(attribute);
+            }
+        } else {
+            //alert box
+            errorLabel.setText("Please enter all required data");
+            errorDialog.show();
         }
-        
+
+
     }//GEN-LAST:event_loadDataButtonActionPerformed
 
     private void decisionAttributeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decisionAttributeBoxActionPerformed
         // TODO add your handling code here:
-        HashMap<String,Set<String>> attributes = fr.getAttributes();
-        
-        if(decisionAttributeBox!=null && decisionAttributeBox.getSelectedItem()!=null){
+        HashMap<String, Set<String>> attributes = fr.getAttributes();
+
+        if (decisionAttributeBox != null && decisionAttributeBox.getSelectedItem() != null) {
             String selectedAttribute = decisionAttributeBox.getSelectedItem().toString();
-            Set<String> attrValues= attributes.get(selectedAttribute);
+            Set<String> attrValues = attributes.get(selectedAttribute);
             daFromBox.removeAllItems();
             daToBox.removeAllItems();
-            for(String value:attrValues){
+            for (String value : attrValues) {
                 daFromBox.addItem(value);
                 daToBox.addItem(value);
             }
             daFromBox.setSelectedIndex(0);
             daToBox.setSelectedIndex(0);
         }
+
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+        stableAttributeSelectList.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
     }//GEN-LAST:event_decisionAttributeBoxActionPerformed
 
     private void stableAttributeSelectListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_stableAttributeSelectListValueChanged
         // TODO add your handling code here:
         //System.out.println(stableAttributeSelectList.getSelectedValuesList());
         stableAttributesLabel.setText(stableAttributeSelectList.getSelectedValuesList().toString());
+        resultTextPane.setText("");
     }//GEN-LAST:event_stableAttributeSelectListValueChanged
+
+    private void okErrorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okErrorButtonActionPerformed
+        // TODO add your handling code here:
+        errorDialog.hide();
+    }//GEN-LAST:event_okErrorButtonActionPerformed
+
+    private void minSupportTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minSupportTextActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_minSupportTextActionPerformed
+
+    private void daFromBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_daFromBoxActionPerformed
+        // TODO add your handling code here:
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+        stableAttributeSelectList.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
+    }//GEN-LAST:event_daFromBoxActionPerformed
+
+    private void daToBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_daToBoxActionPerformed
+        // TODO add your handling code here:
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+        stableAttributeSelectList.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
+    }//GEN-LAST:event_daToBoxActionPerformed
+
+    private void minSupportTextInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_minSupportTextInputMethodTextChanged
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_minSupportTextInputMethodTextChanged
+
+    private void minSupportTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minSupportTextKeyPressed
+        // TODO add your handling code here:
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+        stableAttributeSelectList.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
+    }//GEN-LAST:event_minSupportTextKeyPressed
+
+    private void minConfidenceTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minConfidenceTextKeyPressed
+        // TODO add your handling code here:
+        stableAttributeSelectList.setListData(new String[0]);
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+        stableAttributeSelectList.setEnabled(false);
+        generateActionRulesButton.setEnabled(false);
+        clearStableAttrSelection.setEnabled(false);
+
+    }//GEN-LAST:event_minConfidenceTextKeyPressed
+
+    private void clearStableAttrSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearStableAttrSelectionActionPerformed
+        // TODO add your handling code here:
+        stableAttributeSelectList.clearSelection();
+        stableAttributesLabel.setText("no attributes selected");
+        resultTextPane.setText("");
+
+    }//GEN-LAST:event_clearStableAttrSelectionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -442,18 +708,21 @@ public class ActionRuleUI extends javax.swing.JFrame {
             }
         });
     }
-    
+
     FileReader fr = new FileReader();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AttributeFileButton;
     private javax.swing.JLabel attributeFileLabel;
+    private javax.swing.JButton clearStableAttrSelection;
     private javax.swing.JComboBox<String> daFromBox;
     private javax.swing.JComboBox<String> daToBox;
     private javax.swing.JButton dataFileButton;
     private javax.swing.JLabel dataFileLabel;
     private javax.swing.JComboBox<String> decisionAttributeBox;
     private javax.swing.JComboBox<String> delimeterBox;
+    private javax.swing.JDialog errorDialog;
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JButton generateActionRulesButton;
     private javax.swing.JButton getReaminingAttrsButton;
     private javax.swing.JLabel jLabel1;
@@ -472,6 +741,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
     private javax.swing.JLabel loadedAttributes;
     private javax.swing.JTextField minConfidenceText;
     private javax.swing.JTextField minSupportText;
+    private javax.swing.JButton okErrorButton;
     private java.awt.ScrollPane resultPane;
     private javax.swing.JTextArea resultTextPane;
     private javax.swing.JList<String> stableAttributeSelectList;
