@@ -1,3 +1,5 @@
+package my.actionrule;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,14 +17,14 @@ import java.lang.*;
 
 public class DataProcess {
 	
-	public static List<String> attributeNames;
-	public static ArrayList<ArrayList<String>> data;
-	public static Map<String, ArrayList<String>> attributeValues;
-	public static Map<String, HashSet<String>> distinctAttributeValues;
+	public  List<String> attributeNames;
+	public  ArrayList<ArrayList<String>> data;
+	public  Map<String, ArrayList<String>> attributeValues;
+	public  Map<String, HashSet<String>> distinctAttributeValues;
 
-	public static Map<String, String> modeAttributeValues;
-  public static Map<String, ArrayList<ArrayList<String>>> missingAttributeValues;
-  public static Map<String, Integer> attributeIndex;
+	public  Map<String, String> modeAttributeValues;
+  public  Map<String, ArrayList<ArrayList<String>>> missingAttributeValues;
+  public  Map<String, Integer> attributeIndex;
 	
 
 	public DataProcess() throws Exception{
@@ -44,15 +46,15 @@ public class DataProcess {
 		return attributeNames;
 	}
 	
-	public static ArrayList<ArrayList<String>> getData() {
+	public  ArrayList<ArrayList<String>> getData() {
 		return data;
 	}
 	
-	public static HashSet<String> getDistinctAttributeValues(String attributeName) {
+	public  HashSet<String> getDistinctAttributeValues(String attributeName) {
 		return distinctAttributeValues.get(attributeName);
 	}
 	
-	public static	Map<String, ArrayList<String>> getAllAttributeValues(){
+	public 	Map<String, ArrayList<String>> getAllAttributeValues(){
 		return attributeValues;
 	}
 	
@@ -75,7 +77,7 @@ public class DataProcess {
 	  * Processing  attributes file
 		* @params file : Attributes file path
 	 */
-	private static void readAttributes(String attributesFilePath) {
+	private  void readAttributes(String attributesFilePath) {
 		try {
 			Scanner input = new Scanner(new File(attributesFilePath));
 			int index = 0;
@@ -100,7 +102,7 @@ public class DataProcess {
 		* @params dataFilePath : Absolute path of data file
 		* @params splittingCharacter: Character to split the data. Can be "\t" | ",".
   	*/		 									
-	private static void readData(String dataFilePath, String splittingCharacter) {
+	private  void readData(String dataFilePath, String splittingCharacter) {
 		try {
 				
 				int lineNo = 0;			
@@ -175,7 +177,7 @@ public class DataProcess {
 	
 	
 	// Set Attribute values
-	public static void  setAttributeValues(String attributeName, String attributeValue) {
+	public  void  setAttributeValues(String attributeName, String attributeValue) {
 				
   			ArrayList<String> valuesList;
 				if (attributeValues.containsKey(attributeName)) {
@@ -190,7 +192,7 @@ public class DataProcess {
 	}
 	
 	//Sets Distinct Attribute values
-	private static void setDistinctAttributeValues(String attributeName, String atributeValue)
+	private  void setDistinctAttributeValues(String attributeName, String atributeValue)
 	{
 		HashSet<String> set;
 		if (distinctAttributeValues.containsKey(attributeName)) {
@@ -203,7 +205,7 @@ public class DataProcess {
 		distinctAttributeValues.put(attributeName, set);	
 	}
 	
-	private static void populateAttributeValuesMode()
+	private  void populateAttributeValuesMode()
 	{
 		String attributeName;
 		ArrayList<String> valuesList;
@@ -226,7 +228,7 @@ public class DataProcess {
 		}
 	}
 	
-	private static void replaceMissingAttribute() {
+	private  void replaceMissingAttribute() {
 			String attributeName;
 			ArrayList<ArrayList<String>> valuesList;
 			for (Map.Entry<String, ArrayList<ArrayList<String>>> entry : missingAttributeValues.entrySet()){

@@ -7,6 +7,8 @@ package my.actionrule;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -544,31 +546,44 @@ public class ActionRuleUI extends javax.swing.JFrame {
     private void generateActionRulesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateActionRulesButtonActionPerformed
         // TODO add your handling code here:
         fr.setStableAttributes(stableAttributeSelectList.getSelectedValuesList());
-        resultTextPane.setText(fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString() + "\n" + fr.toString());
+        resultTextPane.setText(fr.getData().toString());
     }//GEN-LAST:event_generateActionRulesButtonActionPerformed
 
     private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
         // TODO add your handling code here:
         if (attributeFileLabel.getText() != null && !attributeFileLabel.getText().equals("no file selected") && dataFileLabel.getText() != null && !dataFileLabel.getText().equals("no file selected") && delimeterBox.getSelectedItem() != null) {
-            minSupportText.setEnabled(true);
-            minConfidenceText.setEnabled(true);
-            decisionAttributeBox.setEnabled(true);
-            daToBox.setEnabled(true);
-            daFromBox.setEnabled(true);
-            getReaminingAttrsButton.setEnabled(true);
+            HashMap<String, Set<String>> attributes= new HashMap<>();
+            try {
+                attributes = fr.getAttributes();
+                
+                if(attributes!=null && !attributes.isEmpty()){
+                    loadedAttributes.setText(attributes.keySet().toString());
+                    decisionAttributeBox.removeAllItems();
+                    for (String attribute : attributes.keySet()) {
+                        decisionAttributeBox.addItem(attribute);
+                    }
+                    minSupportText.setEnabled(true);
+                    minConfidenceText.setEnabled(true);
+                    decisionAttributeBox.setEnabled(true);
+                    daToBox.setEnabled(true);
+                    daFromBox.setEnabled(true);
+                    getReaminingAttrsButton.setEnabled(true);
 
-            fr.setAttributeFile(attributeFileLabel.getText());
-            fr.setDataFile(dataFileLabel.getText());
-            fr.setDelimeter(delimeterBox.getSelectedItem().toString());
-
-            HashMap<String, Set<String>> attributes = fr.getAttributes();
-            loadedAttributes.setText(attributes.keySet().toString());
-
-            decisionAttributeBox.removeAllItems();
-
-            for (String attribute : attributes.keySet()) {
-                decisionAttributeBox.addItem(attribute);
+                    fr.setAttributeFile(attributeFileLabel.getText());
+                    fr.setDataFile(dataFileLabel.getText());
+                    fr.setDelimeter(delimeterBox.getSelectedItem().toString());
+                }
+                else{
+                    //alert box
+                    errorLabel.setText("Incorrect Data files or delimeter provided");
+                    errorDialog.show();
+                }
+            } catch (Exception ex) {
+                //alert box
+                errorLabel.setText("Incorrect Data files or delimeter provided");
+                errorDialog.show();
             }
+            
         } else {
             //alert box
             errorLabel.setText("Please enter all required data");
@@ -579,28 +594,34 @@ public class ActionRuleUI extends javax.swing.JFrame {
     }//GEN-LAST:event_loadDataButtonActionPerformed
 
     private void decisionAttributeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decisionAttributeBoxActionPerformed
-        // TODO add your handling code here:
-        HashMap<String, Set<String>> attributes = fr.getAttributes();
-
-        if (decisionAttributeBox != null && decisionAttributeBox.getSelectedItem() != null) {
-            String selectedAttribute = decisionAttributeBox.getSelectedItem().toString();
-            Set<String> attrValues = attributes.get(selectedAttribute);
-            daFromBox.removeAllItems();
-            daToBox.removeAllItems();
-            for (String value : attrValues) {
-                daFromBox.addItem(value);
-                daToBox.addItem(value);
+        try {
+            // TODO add your handling code here:
+            HashMap<String, Set<String>> attributes = fr.getAttributes();
+            
+            if (decisionAttributeBox != null && decisionAttributeBox.getSelectedItem() != null) {
+                String selectedAttribute = decisionAttributeBox.getSelectedItem().toString();
+                Set<String> attrValues = attributes.get(selectedAttribute);
+                daFromBox.removeAllItems();
+                daToBox.removeAllItems();
+                for (String value : attrValues) {
+                    daFromBox.addItem(value);
+                    daToBox.addItem(value);
+                }
+                daFromBox.setSelectedIndex(0);
+                daToBox.setSelectedIndex(0);
             }
-            daFromBox.setSelectedIndex(0);
-            daToBox.setSelectedIndex(0);
+            
+            stableAttributeSelectList.setListData(new String[0]);
+            stableAttributesLabel.setText("no attributes selected");
+            resultTextPane.setText("");
+            stableAttributeSelectList.setEnabled(false);
+            generateActionRulesButton.setEnabled(false);
+            clearStableAttrSelection.setEnabled(false);
+        } catch (Exception ex) {
+            //alert box
+            errorLabel.setText("Incorrect Data files or delimeter provided");
+            errorDialog.show();
         }
-
-        stableAttributeSelectList.setListData(new String[0]);
-        stableAttributesLabel.setText("no attributes selected");
-        resultTextPane.setText("");
-        stableAttributeSelectList.setEnabled(false);
-        generateActionRulesButton.setEnabled(false);
-        clearStableAttrSelection.setEnabled(false);
     }//GEN-LAST:event_decisionAttributeBoxActionPerformed
 
     private void stableAttributeSelectListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_stableAttributeSelectListValueChanged

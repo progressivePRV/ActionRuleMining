@@ -26,6 +26,7 @@ public class FileReader {
     String decisionAttribute="";
     String toDecisionAttribute="";
     String fromDecisionAttribute="";
+    ArrayList<ArrayList<String>> data = new ArrayList<>();
         
 	
     public void setAttributeFile(String attributeFile) {
@@ -37,6 +38,9 @@ public class FileReader {
     }
 
     public void setDelimeter(String delimeter) {
+            if(delimeter!=null && delimeter.equals("tab")){
+                delimeter = "\t";
+            }
             this.delimeter=delimeter;
     }
     
@@ -99,43 +103,62 @@ public class FileReader {
     public String getFromDecisionAttribute() {
         return fromDecisionAttribute;
     }
+
+    public ArrayList<ArrayList<String>> getData() {
+        return data;
+    }
+    
     
     
             
-    public HashMap<String,Set<String>> getAttributes(){
+    public HashMap<String,Set<String>> getAttributes() throws Exception{
         
         //send files 
         //read files - filling missing values, disc.
         //getContinuousAttributes
         //load attributes from LERS
+        DataProcess dp = new DataProcess();
+        dp.processFiles(attributeFile, dataFile, delimeter);
+        List<String> attributes = dp.getAttributes();
+        HashMap<String,Set<String>> attributeValues = new HashMap<>();
+        data =	dp.getData();
+        
+        if(attributes!=null && !attributes.isEmpty()){
+            for(String attribute:attributes){
+                attributeValues.put(attribute, dp.getDistinctAttributeValues(attribute));
+            }
+        }
+        
+        return attributeValues;
+        
 
-            Set<String> aSet = new HashSet<>();
-            aSet.add("a1");
-            aSet.add("a2");
-            aSet.add("a3");
-            aSet.add("a4");
-
-            Set<String> bSet = new HashSet<>();
-            bSet.add("b1");
-            bSet.add("b2");
-            bSet.add("b3");
-
-            Set<String> cSet = new HashSet<>();
-            cSet.add("c1");
-            cSet.add("c2");
-            cSet.add("c3");
-            cSet.add("c4");
-
-            Set<String> dSet = new HashSet<>();
-            dSet.add("d1");
-            dSet.add("d2");
-
-            HashMap<String,Set<String>> attributes = new HashMap<>();
-            attributes.put("A", aSet);
-            attributes.put("B", bSet);
-            attributes.put("C", cSet);
-            attributes.put("D", dSet);
-            return attributes;
+//            Set<String> aSet = new HashSet<>();
+//            aSet.add("a1");
+//            aSet.add("a2");
+//            aSet.add("a3");
+//            aSet.add("a4");
+//
+//            Set<String> bSet = new HashSet<>();
+//            bSet.add("b1");
+//            bSet.add("b2");
+//            bSet.add("b3");
+//
+//            Set<String> cSet = new HashSet<>();
+//            cSet.add("c1");
+//            cSet.add("c2");
+//            cSet.add("c3");
+//            cSet.add("c4");
+//
+//            Set<String> dSet = new HashSet<>();
+//            dSet.add("d1");
+//            dSet.add("d2");
+//
+//            HashMap<String,Set<String>> attributes = new HashMap<>();
+//            attributes.put("A", aSet);
+//            attributes.put("B", bSet);
+//            attributes.put("C", cSet);
+//            attributes.put("D", dSet);
+//            return attributes;
 
     }
 
