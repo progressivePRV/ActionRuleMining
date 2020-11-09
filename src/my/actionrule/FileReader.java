@@ -118,6 +118,7 @@ public class FileReader {
         //getContinuousAttributes
         //load attributes from LERS
         DataProcess dp = new DataProcess();
+        System.out.println(attributeFile+"\n"+dataFile);
         dp.processFiles(attributeFile, dataFile, delimeter);
         List<String> attributes = dp.getAttributes();
         HashMap<String,Set<String>> attributeValues = new HashMap<>();

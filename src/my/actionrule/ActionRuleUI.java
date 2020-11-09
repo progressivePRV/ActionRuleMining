@@ -554,10 +554,14 @@ public class ActionRuleUI extends javax.swing.JFrame {
         if (attributeFileLabel.getText() != null && !attributeFileLabel.getText().equals("no file selected") && dataFileLabel.getText() != null && !dataFileLabel.getText().equals("no file selected") && delimeterBox.getSelectedItem() != null) {
             HashMap<String, Set<String>> attributes= new HashMap<>();
             try {
+                fr.setAttributeFile(attributeFileLabel.getText());
+                fr.setDataFile(dataFileLabel.getText());
+                fr.setDelimeter(delimeterBox.getSelectedItem().toString());
                 attributes = fr.getAttributes();
                 
                 if(attributes!=null && !attributes.isEmpty()){
                     loadedAttributes.setText(attributes.keySet().toString());
+                    
                     decisionAttributeBox.removeAllItems();
                     for (String attribute : attributes.keySet()) {
                         decisionAttributeBox.addItem(attribute);
@@ -568,10 +572,6 @@ public class ActionRuleUI extends javax.swing.JFrame {
                     daToBox.setEnabled(true);
                     daFromBox.setEnabled(true);
                     getReaminingAttrsButton.setEnabled(true);
-
-                    fr.setAttributeFile(attributeFileLabel.getText());
-                    fr.setDataFile(dataFileLabel.getText());
-                    fr.setDelimeter(delimeterBox.getSelectedItem().toString());
                 }
                 else{
                     //alert box
