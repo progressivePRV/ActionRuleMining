@@ -1,4 +1,4 @@
-//package my.actionrule;
+package my.actionrule;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -27,6 +27,15 @@ public class FileReader {
     String toDecisionAttribute="";
     String fromDecisionAttribute="";
     ArrayList<ArrayList<String>> data = new ArrayList<>();
+    ArrayList<String> attributesList = new ArrayList<>();
+
+    public ArrayList<String> getAttributesList() {
+        return attributesList;
+    }
+
+    public void setAttributesList(ArrayList<String> attributesList) {
+        this.attributesList = attributesList;
+    }
         
 	
     public void setAttributeFile(String attributeFile) {
@@ -119,12 +128,12 @@ public class FileReader {
         //load attributes from LERS
         DataProcess dp = new DataProcess();
         dp.processFiles(attributeFile, dataFile, delimeter);
-        List<String> attributes = dp.getAttributes();
+        attributesList = (ArrayList<String>) dp.getAttributes();
         HashMap<String,Set<String>> attributeValues = new HashMap<>();
         data =	dp.getData();
         
-        if(attributes!=null && !attributes.isEmpty()){
-            for(String attribute:attributes){
+        if(attributesList!=null && !attributesList.isEmpty()){
+            for(String attribute:attributesList){
                 attributeValues.put(attribute, dp.getDistinctAttributeValues(attribute));
             }
         }

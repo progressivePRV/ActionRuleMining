@@ -546,7 +546,11 @@ public class ActionRuleUI extends javax.swing.JFrame {
     private void generateActionRulesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateActionRulesButtonActionPerformed
         // TODO add your handling code here:
         fr.setStableAttributes(stableAttributeSelectList.getSelectedValuesList());
-        resultTextPane.setText(fr.getData().toString());
+        
+        helper.GenerateCertainRules(fr.getData(), fr.getDecisionAttribute(), fr.getAttributesList());
+        HashMap<String,String> certainRules = helper.GetCeratainRules();
+        
+        resultTextPane.setText(certainRules.toString());
     }//GEN-LAST:event_generateActionRulesButtonActionPerformed
 
     private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
@@ -731,6 +735,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
     }
 
     FileReader fr = new FileReader();
+    Helper2 helper = new Helper2();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AttributeFileButton;
