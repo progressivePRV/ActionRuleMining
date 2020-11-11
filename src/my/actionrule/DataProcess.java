@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class DataProcess {
-
+	
+	public String continuousAttribute;
 	public List<String> attributeNames;
 	public ArrayList<ArrayList<String>> data;
 	public Map<String, ArrayList<String>> attributeValues;
@@ -20,7 +22,8 @@ public class DataProcess {
 	public Map<String, String> modeAttributeValues;
 	public ArrayList<ArrayList<String>> missingAttributeValues;
 	public Map<String, Integer> attributeIndex;
-
+	public Map<String, Integer> binMap;
+	
 	public DataProcess() throws Exception {
 
 		attributeNames = new ArrayList<String>();
@@ -31,7 +34,7 @@ public class DataProcess {
 		modeAttributeValues = new HashMap<String, String>();
 		missingAttributeValues = new ArrayList<ArrayList<String>>();
 		attributeIndex = new HashMap<String, Integer>();
-
+		binMap = new HashMap<String, Integer>();
 	}
 
 	// Required getters
@@ -50,17 +53,40 @@ public class DataProcess {
 	public Map<String, ArrayList<String>> getAllAttributeValues() {
 		return attributeValues;
 	}
+	
+	public String getContinuousAttribute() {
+		return continuousAttribute;
+	}
+
+	public void setContinuousAttribute(String attribute) {
+		continuousAttribute = attribute;
+	}
+	
+	public Map<String, Integer> getBinMap() {
+		return binMap;
+	}
+
+	public void setBinMap(Map<String, Integer> binMap) {
+		this.binMap = binMap;
+	}
 
 	public void processFiles(String attributesFile, String dataFile, String splitChar) {
-		readAttributes(attributesFile);
-		readData(dataFile, splitChar);
+		try {
+			readAttributes(attributesFile);
+			readData(dataFile, splitChar);
 
-		// Comment following function to ignore missing values
-		// To replace the missing attributes with mode
+			// Comment following function to ignore missing values
+			// To replace the missing attributes with mode
 
-		populateAttributeValuesMode();
-		replaceMissingAttribute();
+			populateAttributeValuesMode();
+			replaceMissingAttribute();
+			
+			if(getContinuousAttribute() != null)
+				createBin(getContinuousAttribute());
 
+		}catch(Exception e) {
+			System.out.println("Exception occured while processing. Please check the files uploaded");
+		}
 	}
 
 	/**
@@ -74,6 +100,15 @@ public class DataProcess {
 			int index = 0;
 			while (input.hasNextLine()) {
 				String attributeName = input.nextLine();
+				
+				if (attributeName.contains("NUMERIC:")) {
+					setContinuousAttribute(attributeName.split(":")[1].strip());
+					continue;
+				}
+				if(attributeName.contains("/t") || attributeName.contains(",")) {
+					System.out.println("Please upload proper attribute.txt file without tab or comma");
+					return ;
+				}
 				attributeNames.add(attributeName);
 
 				// required to replace missing data
@@ -103,7 +138,10 @@ public class DataProcess {
 			while (input.hasNextLine()) {
 				String[] line = input.nextLine().split(splittingCharacter);
 				ArrayList<String> lineData = new ArrayList<String>(Arrays.asList(line));
-
+				if (lineData.size() != attributeNames.size()) {
+					System.out.println("PLease upload data.txt file with exact values for all attributes");
+					return;
+				}
 				// If no missing data add to data set
 				if (!checkEmptyValueInStringArray(lineData)) {
 
@@ -230,12 +268,48 @@ public class DataProcess {
 			data.add(linedata);
 		}
 	}
+	
+	// create bins for continuous attribute
+	public void createBin(String continuousAttributeName) {
+		
+		ArrayList<String> valuesList = attributeValues.get(continuousAttributeName);
+		HashMap<String, Integer> mode = new HashMap<String, Integer>();
+		for (String val : valuesList) {
+			if (mode.containsKey(val))
+				mode.put(val,  mode.get(val)+1);
+			else {
+				mode.put(val, 1);
+			}	
+//			System.out.println(val+": "+mode.get(val));
+		}
+		ArrayList<Integer> values = new ArrayList<Integer>(mode.values());
+		HashSet<Integer> val = new HashSet<Integer>(values);
+		ArrayList<Integer> binVals = new ArrayList<Integer>(val);
+
+		Collections.sort(binVals);
+
+		for (Map.Entry<String, Integer> entry : mode.entrySet()) {
+			binMap.put(entry.getKey(), (binVals.indexOf(entry.getValue()))+1);
+		}	
+		// Print bin values
+//		for (Map.Entry<String, Integer> entry : binMap.entrySet()) {
+//			System.out.println(entry.getKey()+":"+entry.getValue());
+//		}		
+		
+		// Replace data in data set with bin values
+		for (ArrayList<String> linedata : data) {
+			int index = (int) attributeNames.indexOf(continuousAttributeName);
+			String val1 = linedata.get(index);
+			linedata.set(index, (binMap.get(val1)).toString());
+		}
+		
+	}
 
 	public static void main(String args[]) throws Exception {
 
 		DataProcess dp = new DataProcess();
 		String path = "/home/ubuntu/ActionRuleMining/input/";
-		String attributesFile = path + "TestAttribute.txt";
+		String attributesFile = path + "TestData.txt";
 		String dataFile = path + "TestData.txt";
 		//attributesFile = path + "carAttributes.txt";
 		//dataFile = path + "carData.txt";
@@ -254,9 +328,9 @@ public class DataProcess {
 		System.out.println("\n----- Data Set after replacing missing values with mode ---------");
 		ArrayList<ArrayList<String>> data = dp.getData();
 		for (ArrayList<String> line : data) {
-			// for (String val : line)
-			// System.out.print(val + " ");
-			// System.out.println("");
+			 for (String val : line)
+			 System.out.print(val + " ");
+			 System.out.println("");
 		}
 
 		System.out.println("\n----- Print Distinct values for given attribute ---------");
@@ -277,6 +351,10 @@ public class DataProcess {
 			// for (String val : values)
 			// System.out.print(val + ", ");
 		}
+		System.out.println("\n Print values :      bin values");
+		for (Map.Entry<String, Integer> entry : dp.getBinMap().entrySet()) {
+			System.out.println(entry.getKey()+":"+entry.getValue());
+		}		
 
 	}
 }
