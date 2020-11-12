@@ -296,12 +296,20 @@ public class DataProcess {
 //			System.out.println(entry.getKey()+":"+entry.getValue());
 //		}		
 		
+		ArrayList<String> newAttributeValues = new ArrayList<String>();
+		HashSet<String> newDistinctValues = new HashSet<String>();
 		// Replace data in data set with bin values
 		for (ArrayList<String> linedata : data) {
 			int index = (int) attributeNames.indexOf(continuousAttributeName);
 			String val1 = linedata.get(index);
-			linedata.set(index, (binMap.get(val1)).toString());
+			String newBinValue = binMap.get(val1).toString();
+			linedata.set(index, newBinValue);
+			newAttributeValues.add(newBinValue);
 		}
+		
+		newDistinctValues = new HashSet<String>(newAttributeValues);
+		attributeValues.put(continuousAttributeName, newAttributeValues);
+		distinctAttributeValues.put(continuousAttributeName, newDistinctValues);
 		
 	}
 
@@ -309,15 +317,15 @@ public class DataProcess {
 
 		DataProcess dp = new DataProcess();
 		String path = "/home/ubuntu/ActionRuleMining/input/";
-		String attributesFile = path + "TestData.txt";
+		String attributesFile = path + "TestAttribute.txt";
 		String dataFile = path + "TestData.txt";
 		//attributesFile = path + "carAttributes.txt";
 		//dataFile = path + "carData.txt";
 
-		// attributesFile = path + "mammographic_massesAttributes.txt";
-		// dataFile = path + "mammographic_massesData.txt";
+		attributesFile = path + "mammographic_massesAttributes.txt";
+		dataFile = path + "mammographic_massesData.txt";
 
-		dp.processFiles(attributesFile, dataFile, "\t");
+		dp.processFiles(attributesFile, dataFile, ",");
 		List<String> attributeNames = dp.getAttributes();
 
 		System.out.println("----- Attribute Namess ---------");
