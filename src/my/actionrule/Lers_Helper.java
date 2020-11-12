@@ -17,6 +17,11 @@ public class Lers_Helper {
     ArrayList<LersRule> certainRules;
     ArrayList<LersRule> possibleRules;
     
+    ArrayList<LersRule> GetAllLERSRules(){
+        certainRules.addAll(possibleRules);
+        return certainRules;
+    }
+    
     ArrayList<LersRule> GetCertainRules(){
         return certainRules;
     }
@@ -249,6 +254,93 @@ public class Lers_Helper {
         
     }
     
+    ArrayList<ActionRuleClass> GenerateActionRules(ArrayList<LersRule> rules,String dec_from, String dec_to, ArrayList<Integer> stable_Attributes,int decisionAttribueIndex,int  minSupport, double minConfidence){
+        System.out.println("generateAction Rules called with from=>"+dec_from+" to=>"+dec_to);
+        ArrayList<ActionRuleClass> ARs = new ArrayList<>(); 
+        
+        for (int i = 0; i < rules.size(); i++) {
+            LersRule fromRule = rules.get(i);
+            System.out.println("outer loop=>"+i);
+            if (fromRule.rightSet.values.contains(dec_from)){
+                for (int j = i + 1; j < rules.size(); j++){
+//                    System.out.println("innner loop=>"+j);
+                    LersRule toRule = rules.get(j);
+                    if (toRule.rightSet.values.contains(dec_to)){
+//                        System.out.println("two rules found with to and from attribute");
+                        // hence FromRule and Torule  can produce a Action rule
+                        
+                        ArrayList<String[]> to_From_Pairs = new ArrayList<>();
+                        int num_Flexible = 0;
+                        
+                        for (int k = 0; k < toRule.AttributesName.size(); k++) {
+                            String from_Val = fromRule.leftSet.values.get(k);
+                            String to_Val = toRule.leftSet.values.get(k);
+
+                            if (from_Val == null && to_Val == null) {
+                                continue;
+                            }
+
+
+                            if (stable_Attributes.contains(k)) {
+
+                                // Ensure they are the same.
+                                if (from_Val == null) {
+                                    to_From_Pairs.add(new String[] {Integer.toString(k), to_Val, to_Val});
+                                } else if (to_Val == null) {
+                                    to_From_Pairs.add(new String[] {Integer.toString(k), from_Val, from_Val});
+                                } else if (from_Val.equals(to_Val)) {
+                                    to_From_Pairs.add(new String[] {Integer.toString(k), from_Val, to_Val});
+                                } else {
+                                    break;
+                                }
+
+                            } else {
+                                // It's a flexible attribute.
+                                if (from_Val != null && to_Val != null) {
+                                    to_From_Pairs.add(new String[]{Integer.toString(k), from_Val, to_Val});
+                                    num_Flexible++;
+                                }
+
+                            }
+                        }
+                        
+                         if (to_From_Pairs.isEmpty() || num_Flexible == 0)
+                            continue;
+
+                        ValueSet from_Rule_Dec = fromRule.rightSet;
+                        ValueSet to_Rule_Dec = toRule.rightSet;
+                        
+                        // Encode decision transformation same way as others.
+                        String[] decToFromPair = new String[] {
+                                Integer.toString(decisionAttribueIndex),
+                                from_Rule_Dec.values.get(decisionAttribueIndex),
+                                to_Rule_Dec.values.get(decisionAttribueIndex)};
+
+                        // Support = card(From attributes ^ From decision attributes)
+                        // Conf = (support / card(From attributes)) * (card(To attributes ^ To decision attributes) / card(To attributes))
+
+                        int support = fromRule.support;
+                        double confidence =
+                                ((double) support / fromRule.leftSet.objects.size()) *
+                                ((double) toRule.support / toRule.leftSet.objects.size());
+                               
+                        if (support < minSupport || confidence < minConfidence)
+                            continue;
+
+                        ActionRuleClass newAR = new ActionRuleClass(to_From_Pairs, toRule.AttributesName , decToFromPair, support, confidence);
+                        ARs.add(newAR);
+                        
+                    }
+                }
+            }
+        }
+        
+//        for(ActionRuleClass ar : ARs){
+//            System.out.println(ar);
+//        }
+        
+        return ARs;
+    }
     
     
 }
