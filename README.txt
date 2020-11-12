@@ -50,7 +50,8 @@ Step 4 ->
 			- Navigate to that path to view the output.txt file.
 
 Some explanations about the project:
-	1. This code replaces missing values using 'mode' strategy in the dataset.
+	1. This code replaces missing values using 'mode' strategy in the dataset. 
+		- Missing values will be detected by looking for the presence of '?' character in the <data_file_name>.txt file.
 	2. This code also does discretization of numeric values using 'mode binning' strategy:
 		- In order for the code to understand which value is a continuous value, in the uploaded <attributes_file_name>.txt file, after listing all the attributes, a line like the following should be present:  'NUMERIC:<attribute_name>'. 
 		- This code will handle only one numeric attribute (Dataset can have only one numeric value). 
@@ -59,11 +60,14 @@ Some explanations about the project:
 		- The data file should be of the exact format as shared in the ActionRuleMining Project folder.
 		- The inputs folder has 3 folder, namely: CarData, MamographicData and TestData. 
 		- Please refer to the <data_file_name>.txt file and <attributes_file_name>.txt file inside each folder to see the format of the files to be uploaded.
+		- The <data_file_name>.txt file can be comma or tab delimeted filed.
 		- Program will accept only .txt files having the required format. Other data will be rejected. 
 	4. Generation of action rules will take some time. The progress of the code can be monitored in the output window of Netbeans. 
 
 
 NOTE: The video will demo opening the project in netbeans and running it. It will also explain file formats and output file destination. 
+
+Youtube Demo Link : https://youtu.be/s_nv61g6M0c
 
 		
 
