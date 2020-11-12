@@ -52,6 +52,7 @@ Step 4 ->
 Some explanations about the project:
 	1. This code replaces missing values using 'mode' strategy in the dataset. 
 		- Missing values will be detected by looking for the presence of '?' character in the <data_file_name>.txt file.
+		- (Youtube demo video has mistakenly said that missing values are ',' characters. Please consider that as '?' and not ',')
 	2. This code also does discretization of numeric values using 'mode binning' strategy:
 		- In order for the code to understand which value is a continuous value, in the uploaded <attributes_file_name>.txt file, after listing all the attributes, a line like the following should be present:  'NUMERIC:<attribute_name>'. 
 		- This code will handle only one numeric attribute (Dataset can have only one numeric value). 
