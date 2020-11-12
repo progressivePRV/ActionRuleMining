@@ -7,6 +7,8 @@ package my.actionrule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -546,17 +548,66 @@ public class ActionRuleUI extends javax.swing.JFrame {
 
     private void generateActionRulesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateActionRulesButtonActionPerformed
         // TODO add your handling code here:
+        
         fr.setStableAttributes(stableAttributeSelectList.getSelectedValuesList());
+        List<String>stableAttrs = fr.getStableAttributes();
+        ArrayList<Integer> stableAttrIndex = new ArrayList<>();
+        ArrayList<String> attrs = fr.getAttributesList();
+        
+        for(String a : stableAttrs){
+            stableAttrIndex.add(attrs.indexOf(a));
+        }
+        
+        Map<String, Integer> binMap = fr.getBinMap();
+        
+        String binString = "";
+        for(String binKey:binMap.keySet()){
+            binString += binKey+"==>"+binMap.get(binKey)+"\n";
+        }
         
         //helper.GenerateCertainRules(fr.getData(), fr.getDecisionAttribute(), fr.getAttributesList())
         //HashMap<String,String> certainRules = helper.GetCeratainRules();
-        resultTextPane.setText("Processing LERS......");
+        
         Lers_Helper lh = new Lers_Helper();
+        
          // rows ,  decision_attribute_index , Attribute Names,  support,  confidence
-        lh.GenerateLERSRules(fr.getData(),fr.getData().get(0).size()-1, fr.getAttributesList() ,2, 0.20);
+        lh.GenerateLERSRules(fr.getData(),fr.getDecisionIndex(), fr.getAttributesList() ,fr.getMinSupport(), (fr.getMinConfidence()/100));
+
+        ArrayList<LersRule> allRules = lh.GetAllLERSRules();
+        if(allRules.size()>0){
+            //String lersRules = allRules.toString();
+            String ls = "";
+                for(LersRule ar : allRules){
+//              System.out.println(ar);
+                    ls += ar.toString() + "\n"; 
+                }
+            ArrayList<ActionRuleClass> actionRules = lh.GenerateActionRules(allRules, fr.getFromDecisionAttribute(), fr.getToDecisionAttribute(), stableAttrIndex, fr.getDecisionIndex(), fr.getMinSupport(), (fr.getMinConfidence()/100));
+            if(actionRules.size()>0){
+                //modify
+                //String actionR = actionRules.toString();
+                
+                String s = "";
+                for(ActionRuleClass ar : actionRules){
+//              System.out.println(ar);
+                    s += ar.toString() + "\n"; 
+                }
+                String out = fr.writeFile("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n Action Rules: \n"+s);
+                resultTextPane.setText("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n Action Rules: \n"+s+"\nOutput File Location: "+out);
+                
+            }
+            else{
+                String out = fr.writeFile("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n No action rules generated");
+                resultTextPane.setText("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n No action rules generated"+"\nOutput File Location: "+out);
+                
+            }
+            
+        }
+        else{
+            String out = fr.writeFile("Bin Values:\n"+binString+"\nNo LERS rules possible with given support and confidence");
+            resultTextPane.setText("Bin Values:\n"+binString+"\nNo LERS rules possible with given support and confidence"+"\nOutput File Location: "+out);
+            
+        }
         
-        
-        resultTextPane.setText(lh.GetCertainRules().toString());
     }//GEN-LAST:event_generateActionRulesButtonActionPerformed
 
     private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
@@ -609,6 +660,8 @@ public class ActionRuleUI extends javax.swing.JFrame {
             HashMap<String, Set<String>> attributes = fr.getAttributes();
             
             if (decisionAttributeBox != null && decisionAttributeBox.getSelectedItem() != null) {
+                ArrayList<String> attrs = fr.getAttributesList();
+                fr.setDecisionIndex(attrs.indexOf(decisionAttributeBox.getSelectedItem().toString()));
                 String selectedAttribute = decisionAttributeBox.getSelectedItem().toString();
                 Set<String> attrValues = attributes.get(selectedAttribute);
                 daFromBox.removeAllItems();

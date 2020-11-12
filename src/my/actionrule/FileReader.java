@@ -5,10 +5,14 @@
  */
 package my.actionrule;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,6 +32,24 @@ public class FileReader {
     String fromDecisionAttribute="";
     ArrayList<ArrayList<String>> data = new ArrayList<>();
     ArrayList<String> attributesList = new ArrayList<>();
+    int decisionIndex;
+    Map<String, Integer> binMap;
+
+    public Map<String, Integer> getBinMap() {
+        return binMap;
+    }
+
+    public void setBinMap(Map<String, Integer> binMap) {
+        this.binMap = binMap;
+    }
+
+    public int getDecisionIndex() {
+        return decisionIndex;
+    }
+
+    public void setDecisionIndex(int decisionIndex) {
+        this.decisionIndex = decisionIndex;
+    }
 
     public ArrayList<String> getAttributesList() {
         return attributesList;
@@ -138,6 +160,8 @@ public class FileReader {
             }
         }
         
+        binMap = dp.getBinMap();
+        
         return attributeValues;
         
 
@@ -169,6 +193,32 @@ public class FileReader {
 //            attributes.put("D", dSet);
 //            return attributes;
 
+    }
+    
+    public String writeFile(String fileValue){
+        String out="";
+        try {
+            File myObj = new File("output.txt");
+            if (myObj.createNewFile()) {
+              System.out.println("Output File created: " + myObj.getAbsolutePath());
+            } else {
+              System.out.println("File already exists.");
+            }
+            try {
+                FileWriter myWriter = new FileWriter("output.txt");
+                myWriter.write(fileValue);
+                myWriter.close();
+                System.out.println("Successfully wrote to output.txt file.");
+                out += myObj.getAbsolutePath();
+              } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+              }
+                    } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+          }
+        return out;
     }
 
     @Override

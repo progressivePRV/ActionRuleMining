@@ -102,7 +102,7 @@ public class DataProcess {
 				String attributeName = input.nextLine();
 				
 				if (attributeName.contains("NUMERIC:")) {
-					setContinuousAttribute(attributeName.split(":")[1].strip());
+					setContinuousAttribute(attributeName.split(":")[1].trim());
 					continue;
 				}
 				if(attributeName.contains("/t") || attributeName.contains(",")) {

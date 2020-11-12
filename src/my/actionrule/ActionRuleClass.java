@@ -73,7 +73,8 @@ public class ActionRuleClass {
         stringBuilder.append(this.dectojpair[2]);
         stringBuilder.append(")");
 
-        stringBuilder.append(String.format(" SUPPORT: "+this.sup+" CONFIDENCE: "+(this.confi *100)+ " percent"));
+        String tmp = String.format("%.2f",this.confi*100);
+        stringBuilder.append(" SUPPORT: "+this.sup+" CONFIDENCE: "+tmp+ "%");
 
         return stringBuilder.toString();
     }
