@@ -104,7 +104,7 @@ public class DataProcess {
 				String attributeName = input.nextLine();
 				
 				if (attributeName.contains("NUMERIC:")) {
-					setContinuousAttribute(attributeName.split(":")[1].strip());
+					setContinuousAttribute(attributeName.split(":")[1].trim());
 					continue;
 				}
 				if(attributeName.contains("/t") || attributeName.contains(",")) {
@@ -322,36 +322,36 @@ public class DataProcess {
 		
 	}
 
-	public static void main(String args[]) throws Exception {
-
-		DataProcess dp = new DataProcess();
-		String path = "/home/ubuntu/ActionRuleMining/input/";
-		String attributesFile = path + "TestAttribute.txt";
-		String dataFile = path + "TestData.txt";
-		//attributesFile = path + "carAttributes.txt";
-		//dataFile = path + "carData.txt";
-
-		attributesFile = path + "mammographic_massesAttributes.txt";
-		dataFile = path + "mammographic_massesData.txt";
-
-		dp.processFiles(attributesFile, dataFile, ",");
-		List<String> attributeNames = dp.getAttributes();
-
-		System.out.println("----- Attribute Namess ---------");
-		for (String attribute : attributeNames) {
-			System.out.print(attribute + ", ");
-		}
-
-//		System.out.println("\n----- Data Set after replacing missing values with mode ---------");
-//		ArrayList<ArrayList<String>> data = dp.getData();
-//		for (ArrayList<String> line : data) {
-//			 for (String val : line)
-//			 System.out.print(val + " ");
-//			 System.out.println("");
+//	public static void main(String args[]) throws Exception {
+//
+//		DataProcess dp = new DataProcess();
+//		String path = "/home/ubuntu/ActionRuleMining/input/";
+//		String attributesFile = path + "TestAttribute.txt";
+//		String dataFile = path + "TestData.txt";
+//		//attributesFile = path + "carAttributes.txt";
+//		//dataFile = path + "carData.txt";
+//
+//		attributesFile = path + "MamographicData/mammographic_massesAttributes.txt";
+//		dataFile = path + "MamographicData/mammographic_massesData.txt";
+//
+//		dp.processFiles(attributesFile, dataFile, ",");
+//		List<String> attributeNames = dp.getAttributes();
+//
+//		System.out.println("----- Attribute Namess ---------");
+//		for (String attribute : attributeNames) {
+//			System.out.print(attribute + ", ");
 //		}
-
-		System.out.println("\n----- Print Distinct values for given attribute ---------");
-
+//
+////		System.out.println("\n----- Data Set after replacing missing values with mode ---------");
+////		ArrayList<ArrayList<String>> data = dp.getData();
+////		for (ArrayList<String> line : data) {
+////			 for (String val : line)
+////			 System.out.print(val + " ");
+////			 System.out.println("");
+////		}
+//
+//		System.out.println("\n----- Print Distinct values for given attribute ---------");
+//
 //		for (String attribute : attributeNames) {
 //			System.out.print("\n" + attribute + " ");
 //			HashSet<String> distinct = dp.getDistinctAttributeValues(attribute);
@@ -359,27 +359,24 @@ public class DataProcess {
 //				System.out.print(value + " ");
 //			}
 //		}
-
-		System.out.println("\n----- Print values per attribute ---------");
-		Map<String, ArrayList<String>> attValues = dp.getAllAttributeValues();
-		for (Map.Entry<String, ArrayList<String>> entry : attValues.entrySet()) {
-			System.out.print("\n" + entry.getKey() + " -->");
-			ArrayList<String> values = entry.getValue();
-			 // for (String val : values)
-			 // System.out.print(val + ", ");
-		}
-//		System.out.println("\n Print values :      bin values");
-//		for (Map.Entry<String, Integer> entry : dp.getBinMap().entrySet()) {
-//			System.out.println(entry.getKey()+":"+entry.getValue());
+//
+//		System.out.println("\n----- Print values per attribute ---------");
+//		Map<String, ArrayList<String>> attValues = dp.getAllAttributeValues();
+//		for (Map.Entry<String, ArrayList<String>> entry : attValues.entrySet()) {
+//			System.out.print("\n" + entry.getKey() + " -->");
+//			ArrayList<String> values = entry.getValue();
+//			// for (String val : values)
+//			// System.out.print(val + ", ");
 //		}
-		
-		System.out.println("\n Print values :      bin values");
-		for (Map.Entry<Integer, HashSet<Integer>> entry : dp.getBinMap().entrySet()) {
-			System.out.print("\n"+entry.getKey()+": ");
-			for (Integer s : entry.getValue()) {
-				System.out.print(s+", ");
-			}
-		}
+//		
+//		System.out.println("\n Print values :      bin values");
+//		for (Map.Entry<Integer, HashSet<Integer>> entry : dp.getBinMap().entrySet()) {
+//			System.out.print("\n" + entry.getKey() + ": ");
+//			for (Integer s : entry.getValue()) {
+//				System.out.print(s + ", ");
+//			}
+//		}
+//
+//	}
 
-	}
 }

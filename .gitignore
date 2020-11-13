@@ -1,3 +1,5 @@
 *.class
 *.swp
 /build/
+/dist/
+/nbproject/private/

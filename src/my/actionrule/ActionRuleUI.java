@@ -5,7 +5,10 @@
  */
 package my.actionrule;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +90,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
         errorDialogLayout.setHorizontalGroup(
             errorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, errorDialogLayout.createSequentialGroup()
-                .addContainerGap(426, Short.MAX_VALUE)
+                .addContainerGap(430, Short.MAX_VALUE)
                 .addComponent(okErrorButton)
                 .addContainerGap())
             .addGroup(errorDialogLayout.createSequentialGroup()
@@ -98,7 +101,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
         errorDialogLayout.setVerticalGroup(
             errorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(errorDialogLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(47, Short.MAX_VALUE)
                 .addComponent(errorLabel)
                 .addGap(34, 34, 34)
                 .addComponent(okErrorButton)
@@ -283,7 +286,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(clearStableAttrSelection)
                                     .addComponent(getReaminingAttrsButton))))
-                        .addGap(0, 435, Short.MAX_VALUE))
+                        .addGap(0, 510, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,7 +405,7 @@ public class ActionRuleUI extends javax.swing.JFrame {
                         .addComponent(stableAttributesLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(clearStableAttrSelection)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(generateActionRulesButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resultPane, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -545,12 +548,66 @@ public class ActionRuleUI extends javax.swing.JFrame {
 
     private void generateActionRulesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateActionRulesButtonActionPerformed
         // TODO add your handling code here:
+        
         fr.setStableAttributes(stableAttributeSelectList.getSelectedValuesList());
+        List<String>stableAttrs = fr.getStableAttributes();
+        ArrayList<Integer> stableAttrIndex = new ArrayList<>();
+        ArrayList<String> attrs = fr.getAttributesList();
         
-        helper.GenerateCertainRules(fr.getData(), fr.getDecisionAttribute(), fr.getAttributesList());
-        HashMap<String,String> certainRules = helper.GetCeratainRules();
+        for(String a : stableAttrs){
+            stableAttrIndex.add(attrs.indexOf(a));
+        }
         
-        resultTextPane.setText(certainRules.toString());
+        Map<String, Integer> binMap = fr.getBinMap();
+        
+        String binString = "";
+        for(String binKey:binMap.keySet()){
+            binString += binKey+"==>"+binMap.get(binKey)+"\n";
+        }
+        
+        //helper.GenerateCertainRules(fr.getData(), fr.getDecisionAttribute(), fr.getAttributesList())
+        //HashMap<String,String> certainRules = helper.GetCeratainRules();
+        
+        Lers_Helper lh = new Lers_Helper();
+        
+         // rows ,  decision_attribute_index , Attribute Names,  support,  confidence
+        lh.GenerateLERSRules(fr.getData(),fr.getDecisionIndex(), fr.getAttributesList() ,fr.getMinSupport(), (fr.getMinConfidence()/100));
+
+        ArrayList<LersRule> allRules = lh.GetAllLERSRules();
+        if(allRules.size()>0){
+            //String lersRules = allRules.toString();
+            String ls = "";
+                for(LersRule ar : allRules){
+//              System.out.println(ar);
+                    ls += ar.toString() + "\n"; 
+                }
+            ArrayList<ActionRuleClass> actionRules = lh.GenerateActionRules(allRules, fr.getFromDecisionAttribute(), fr.getToDecisionAttribute(), stableAttrIndex, fr.getDecisionIndex(), fr.getMinSupport(), (fr.getMinConfidence()/100));
+            if(actionRules.size()>0){
+                //modify
+                //String actionR = actionRules.toString();
+                
+                String s = "";
+                for(ActionRuleClass ar : actionRules){
+//              System.out.println(ar);
+                    s += ar.toString() + "\n"; 
+                }
+                String out = fr.writeFile("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n Action Rules: \n"+s);
+                resultTextPane.setText("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n Action Rules: \n"+s+"\nOutput File Location: "+out);
+                
+            }
+            else{
+                String out = fr.writeFile("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n No action rules generated");
+                resultTextPane.setText("Bin Values:\n"+binString+"\nLERS Rules:\n:"+ls+"\n No action rules generated"+"\nOutput File Location: "+out);
+                
+            }
+            
+        }
+        else{
+            String out = fr.writeFile("Bin Values:\n"+binString+"\nNo LERS rules possible with given support and confidence");
+            resultTextPane.setText("Bin Values:\n"+binString+"\nNo LERS rules possible with given support and confidence"+"\nOutput File Location: "+out);
+            
+        }
+        
     }//GEN-LAST:event_generateActionRulesButtonActionPerformed
 
     private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
@@ -603,6 +660,8 @@ public class ActionRuleUI extends javax.swing.JFrame {
             HashMap<String, Set<String>> attributes = fr.getAttributes();
             
             if (decisionAttributeBox != null && decisionAttributeBox.getSelectedItem() != null) {
+                ArrayList<String> attrs = fr.getAttributesList();
+                fr.setDecisionIndex(attrs.indexOf(decisionAttributeBox.getSelectedItem().toString()));
                 String selectedAttribute = decisionAttributeBox.getSelectedItem().toString();
                 Set<String> attrValues = attributes.get(selectedAttribute);
                 daFromBox.removeAllItems();
@@ -735,7 +794,6 @@ public class ActionRuleUI extends javax.swing.JFrame {
     }
 
     FileReader fr = new FileReader();
-    Helper2 helper = new Helper2();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AttributeFileButton;
